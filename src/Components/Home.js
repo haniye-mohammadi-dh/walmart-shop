@@ -39,7 +39,7 @@ const Home = () => {
                   <Card
                     style={{ width: "18rem", marginTop: "2rem" }}
                     className="cart-hover"
-                    onClick={() => { navigate(`product/${item._id}`)}}
+                    onClick={() => { navigate(`/product/${item._id}`)}}
                   >
                     <Card.Img
                       variant="top"

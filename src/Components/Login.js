@@ -14,17 +14,19 @@ const Login = () => {
           password: `${password}`,
         }
       );
-
     } catch (error) {
-      const answer=error.response.data; 
-      setresolve(JSON.parse(JSON.stringify(answer)))
-   
+      const answer = error.response.data;
+      setresolve(JSON.parse(JSON.stringify(answer)));
+      console.log(answer);
     }
   };
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-const[resolve,setresolve] =useState({});
+  const [resolve, setresolve] = useState({});
+  const [userNameTuched, setUserNameTuched] = useState(false);
+  const [passwordTuched, setPasswordTuched] = useState(false);
+
   return (
     <div>
       <Form
@@ -37,7 +39,8 @@ const[resolve,setresolve] =useState({});
           width: "40rem",
           marginLeft: "30%",
           backgroundColor: "white",
-          height: "22rem",
+          height: "auto",
+          paddingBottom: "8px"
         }}
       >
         <Navbar.Brand
@@ -60,28 +63,44 @@ const[resolve,setresolve] =useState({});
             type="text"
             placeholder="Enter email / User name"
             style={{ width: "30rem", marginLeft: "13%" }}
-            onChange={(e) => {
+            onBlur={(e) => {
               setUserName(e.target.value);
+              setUserNameTuched(true);
             }}
           />
         </Form.Group>
-
+        {userName.length < 5 && userNameTuched && (
+          <span style={{ color: "red" }}>
+            this fild must be at least 5 character{" "}
+          </span>
+        )}
         <Form.Group className="mb-1" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Password"
             style={{ width: "30rem", marginLeft: "13%" }}
-            onChange={(e) => {
+            onBlur={(e) => {
               setPassword(e.target.value);
+              setPasswordTuched(true);
             }}
-          /> { !resolve.success&&<h6 style={{color:"red"}}>{resolve.message}</h6>}
+          />{" "}
         </Form.Group>
-      
+        {!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+          password
+        ) &&
+          passwordTuched && (
+            <span style={{ color: "red" }}>
+              password must be at least 1 specilal chracter and 1 capital
+              chracter 1 lower chracter and 4 number
+            </span>
+          )}
+        {!resolve.success &&resolve.message!=="4 errors occurred"&& <p style={{ color: "red" }}>{resolve.message}</p>}
+{resolve.message==="4 errors occurred"&&<p style={{ color: "red" }}>please fill the filds</p>}
         <Button
           variant="outline-success"
           type="button"
-          className="mt-3 "
+          
           onClick={req}
         >
           Log in
@@ -89,7 +108,7 @@ const[resolve,setresolve] =useState({});
         <Button
           variant="outline-primary"
           type="submit"
-          className="mt-3 ms-3"
+          className=" ms-3"
           onClick={() => {
             navigate("/signup");
           }}
@@ -97,7 +116,6 @@ const[resolve,setresolve] =useState({});
           Sing up
         </Button>
       </Form>
-     
     </div>
   );
 };
