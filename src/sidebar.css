@@ -1,0 +1,17 @@
+.sidebarImg {
+  margin-top: "3rem";
+ 
+}
+.navbar {
+  height: "35rem";
+  width: "90%";
+}
+@media screen and (max-height: 320px) {
+  .navbar {
+    margin-right: 5px;
+    width: auto !important;
+  }
+  .sidebarImg {
+    display: none;
+  }
+}

@@ -11,60 +11,38 @@ import Signup from "./Components/Signup";
 import Address from "./Components/Address";
 import Checkout from "./Components/Checkout";
 import ChangePassword from "./Components/ChangePassword";
-import Sidebar from "./Components/Sidebar";
+
 import ChangeProfile from "./Components/ChangeProfile";
 import UploadAvatar from "./Components/UploadAvatar";
-
-import { useEffect, useState } from "react";
-import axios from "axios";
 import Profile from "./Components/Profile";
 import GoLogin from "./Components/GoLogin";
 import UnFound from "./Components/UnFound";
+import Orders from "./Components/Orders";
+// import GetProfile from "./Components/GetProfile";
+import { useSelector } from "react-redux";
 
 function App() {
-  const [login, setLogin] = useState(null);
-  const [email, setEmail] = useState("");
-  const [img, setImg] = useState("");
-  const req = async () => {
-    try {
-      const { data } = await axios.get(
-        "http://kzico.runflare.run/user/profile",
-        {
-          headers: {
-            authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiaGF3bmkiLCJpYXQiOjE2Njk3MTgxMjQsImV4cCI6MTY3MDMyMjkyNH0.80fPc6oywoT893mbyxcO9ms69FsoxBkV55Xaqxj5zI8",
-          },
-        }
-      );
+const login=useSelector(state=>state.checkLogin);
 
-      setLogin(data.success);
-      setEmail(data.user.email);
-      setImg(data.user.image);
-      console.log(email);
-    } catch (error) {
-      setLogin(error.response.data.success);
-    }
-  };
-  console.log(login);
-  useEffect(() => {
-    req();
-  });
   return (
     <div className="App">
-      <Header login={login} email={email} img={img}/>
+      <Header />
       <Routes>
         <Route path="/" element={<Home  />} />
+        <Route path="/goLogin" element={<GoLogin  />} />
         <Route path="/product/:productId" element={<Product />} />
-        <Route path="/login" element={!login?<Login />:<Home/>} />
+        <Route path="/login" element={login?<Home/>:<Login />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/signup" element={!login?<Signup />:<Home/>} />
-        <Route path="/address" element={login?<Address />:<GoLogin/>} />
-        <Route path="/checkout" element={login?<Checkout />:<GoLogin/>} />
-        <Route path={"/setting/changePassword"} element={login?<ChangePassword />:<GoLogin/>} />
-        <Route path="/setting/changeProfile" element={login?<ChangeProfile />:<GoLogin/>} />
-        <Route path="/setting/uploadAvatar" element={login?<UploadAvatar />:<GoLogin/>} />
-        <Route path="/profile" element={login?<Profile />:<GoLogin/>} />
+        <Route path="/signup" element={login?<Home/>:<Signup />} />
+        <Route path="/address" element={!login?<GoLogin/>:<Address />} />
+        <Route path="/checkout" element={!login?<GoLogin/>:<Checkout />} />
+        <Route path={"/setting/changePassword"} element={!login?<GoLogin/>:<ChangePassword />} />
+        <Route path="/setting/changeProfile" element={!login?<GoLogin/>:<ChangeProfile />} />
+        <Route path="/setting/uploadAvatar" element={!login?<GoLogin/>:<UploadAvatar />} />
+        <Route path="/profile" element={!login?<GoLogin/>:<Profile />} />
         <Route path="/*" element={<UnFound/>} />
+        <Route path="/orders" element={!login?<GoLogin/>:<Orders />} />
+        {/* <Route path="/getProfile" element={<GetProfile/>} /> */}
           
       </Routes>
     </div>

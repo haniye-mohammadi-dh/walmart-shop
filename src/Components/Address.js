@@ -1,23 +1,34 @@
-import React from 'react'
-import { Button, Form, Navbar } from 'react-bootstrap';
+import React, { useState } from 'react'
+import { Button, Col, Container, Form, Navbar, Row } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { submitCart } from '../redux/action';
 
 const Address = () => {
     const navigate = useNavigate();
+const dispatch = useDispatch();
+const [address,setAddress] = useState();
+const [city,setCity] = useState();
+const [postal,setPostal] = useState();
+const [number,setNumber] = useState();
 
   return (
     <div> {" "}
+    <Container>
+      <Row>
+        <Col>
     <Form
-      className="mt-4 "
+      className="mt-4 mx-auto "
       style={{
         boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px",
         borderTop: "4px solid #852999",
         borderBottom: "4px solid #852999",
         backgroundColor: "white",
         borderRadius: "10px",
-        width: "40rem",
-        marginLeft: "30%",
-        height: "30rem",
+        width: "80%",
+ 
+        height: "auto",
+        paddingBottom:"15px"
       }}
     >
       <Navbar.Brand
@@ -39,8 +50,8 @@ const Address = () => {
         <Form.Control
           type="text"
           placeholder="City"
-          style={{ width: "30rem", marginLeft: "13%" }}
-         
+          style={{ width: "70%", marginLeft: "13%" }}
+          onBlur={(e)=>setCity(e.target.value)}
         />
       </Form.Group>
       <Form.Group className="mb-1" controlId="formBasicEmail">
@@ -48,8 +59,8 @@ const Address = () => {
         <Form.Control
           type="text"
           placeholder=" Address "
-          style={{ width: "30rem", marginLeft: "13%" }}
-        
+          style={{ width: "70%", marginLeft: "13%" }}
+        onBlur={(e)=>setAddress(e.target.value)}
         />
       </Form.Group>
       <Form.Group className="mb-1" controlId="formBasicPassword">
@@ -57,7 +68,8 @@ const Address = () => {
         <Form.Control
           type="number"
           placeholder="Postal code"
-          style={{ width: "30rem", marginLeft: "13%" }}
+          style={{ width: "70%", marginLeft: "13%" }}
+          onBlur={(e)=>setPostal(e.target.value)}
           
         />
       </Form.Group>
@@ -66,17 +78,27 @@ const Address = () => {
         <Form.Control
           type="number"
           placeholder="Phone number"
-          style={{ width: "30rem", marginLeft: "13%" }}
+          style={{ width: "70%", marginLeft: "13%" }}
+          onBlur={(e)=>setNumber(e.target.value)}
         />
       </Form.Group>
       < Button
+      onClick={()=>{
+        dispatch(submitCart(city,address,postal,number));
+        navigate("/checkout")
+      }
+      }
         variant="outline-success"
         type="button"
-        className="mt-3" onClick={()=>navigate("/checkout")}
+        className="mt-3" 
       >
         Next
       </Button>
-    </Form></div>
+    </Form>
+    </Col>
+    </Row>
+    </Container>
+    </div>
   )
 }
 
