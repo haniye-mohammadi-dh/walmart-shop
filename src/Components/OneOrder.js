@@ -1,28 +1,23 @@
 import React, { useEffect, useState } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  Col,
-  Container,
-  Row,
-  Spinner,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Badge, Card, Col, Container, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { oneOrder } from "../redux/action";
 
-const Checkout = () => {
-  const checkkOut = JSON.parse(localStorage.getItem("checkOut"));
-  const [checkOut, setCheckOut] = useState(checkkOut);
+const OneOrder = () => {
+  const { orderId } = useParams();
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate();
+  const { data, loading, error } = useSelector((state) => state.getOrder);
+
   useEffect(() => {
-    setCheckOut(JSON.parse(localStorage.getItem("checkOut")));
-  }, [checkOut]);
+    dispatch(oneOrder(orderId));
+  }, []);
 
   return (
     <div>
-      {checkOut ? (
-        checkOut.orderItems.map((item) => {
+      {data.map((item) => {
+        return item.orderItems.map((item) => {
           return (
             <Container>
               <Row>
@@ -52,9 +47,6 @@ const Checkout = () => {
                               <Col>
                                 <Card.Title> ${item.product.price} </Card.Title>
                               </Col>
-                              <Col>
-                                <Card.Title>count {item.qty} </Card.Title>
-                              </Col>
                             </Row>
                           </div>
                         </Col>
@@ -65,10 +57,8 @@ const Checkout = () => {
               </Row>
             </Container>
           );
-        })
-      ) : (
-        <Spinner></Spinner>
-      )}
+        });
+      })}
       <div className="d-flex mt-2">
         <Badge
           className="mx-auto "
@@ -87,31 +77,8 @@ const Checkout = () => {
           shopping Price: $ 5
         </Badge>
       </div>
-      <div className="d-flex mt-5">
-        <Button
-          variant="primary"
-          className="mx-auto"
-          style={{ width: "20%" }}
-          onClick={() => {
-            navigate("/cart");
-          }}
-        >
-          edit
-        </Button>
-        <Button
-          variant="primary"
-          className="mx-auto"
-          style={{ width: "20%" }}
-          onClick={() => {
-            navigate("/");
-            localStorage.setItem("product", []);
-          }}
-        >
-          Done
-        </Button>
-      </div>
     </div>
   );
 };
 
-export default Checkout;
+export default OneOrder;

@@ -14,7 +14,7 @@ const ChangeProfile = () => {
   const [gender, setGender] = useState("");
   const dispatch = useDispatch();
   const { data, error } = useSelector((state) => state.changePassword);
-  const[isClicked,setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   return (
     <div>
       <Container style={{ color: "black" }}>
@@ -24,7 +24,7 @@ const ChangeProfile = () => {
             sm={{ span: 1, offset: 0 }}
             className="mx-auto"
           >
-            <Sidebar />
+            <Sidebar tab="changeProfile" />
           </Col>
           <Col
             md={{ span: 4, offset: 0 }}
@@ -114,7 +114,7 @@ const ChangeProfile = () => {
                       type={type}
                       id={`inline-${type}-1`}
                       onBlur={(e) => {
-                        setGender(e.target.value);
+                        setGender("male");
                       }}
                     />
                     <Form.Check
@@ -124,31 +124,37 @@ const ChangeProfile = () => {
                       type={type}
                       id={`inline-${type}-2`}
                       onBlur={(e) => {
-                        setGender(e.target.value);
+                        setGender("female");
                       }}
                     />
                   </div>
                 ))}
               </Form.Group>
-              {isClicked &&data.map((item) => {
-                return (
-                  <div>
-                    <span
-                      kay={item.message}
-                      style={{ color: "green", fontSize: "1rem" }}
-                    >
-                      {item.message}
-                    </span>
-                    <img
-                      src="https://img.icons8.com/color/50/null/double-tick.png"
-                      style={{ marginBottom: "0.5rem" }}
-                    />
-                  </div>
-                );
-              })}
-              {isClicked&&!firstName && !lastName && !age && !city && !gender ? (
+              {isClicked &&
+                data.map((item) => {
+                  return (
+                    <div>
+                      <span
+                        kay={item.message}
+                        style={{ color: "green", fontSize: "1rem" }}
+                      >
+                        {item.message}
+                      </span>
+                      <img
+                        src="https://img.icons8.com/color/50/null/double-tick.png"
+                        style={{ marginBottom: "0.5rem" }}
+                      />
+                    </div>
+                  );
+                })}
+              {isClicked &&
+              !firstName &&
+              !lastName &&
+              !age &&
+              !city &&
+              !gender ? (
                 <p style={{ color: "red" }}>please fill the filds</p>
-              ) : (
+              ) : error ? (
                 error.map((item) => {
                   return (
                     <p key={item.message} style={{ color: "red" }}>
@@ -156,14 +162,16 @@ const ChangeProfile = () => {
                     </p>
                   );
                 })
+              ) : (
+                ""
               )}
-              
+
               <Button
                 variant="outline-success"
                 type="button"
                 className="mt-3 "
                 onClick={() => {
-                 setIsClicked(true);
+                  setIsClicked(true);
                   dispatch(profile(firstName, lastName, age, city, gender));
                 }}
               >

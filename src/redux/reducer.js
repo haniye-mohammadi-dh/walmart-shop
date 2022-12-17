@@ -43,6 +43,39 @@ export const login = (
       return state;
   }
 };
+
+export const getOrder = (
+  state = { data: [], loading: false, error: [] },
+  { type, payload }
+) => {
+  switch (type) {
+    case "success":
+      return payload;
+    case "loading":
+      return payload;
+    case "failed":
+      return payload;
+
+    default:
+      return state;
+  }
+};
+export const getAllOrder = (
+  state = { data: [], loading: false, error: [] },
+  { type, payload }
+) => {
+  switch (type) {
+    case "success":
+      return payload;
+    case "loading":
+      return payload;
+    case "failed":
+      return payload;
+
+    default:
+      return state;
+  }
+};
 export const signup = (
   state = { data: [], loading: false, error: [] },
   { type, payload }
@@ -109,6 +142,16 @@ export const changeProfile = (state = {data: [], error: [] }, { type, payload })
     case "success":
       return payload;
     case "failed":
+      return payload;
+    default:
+      return state;
+  }
+};
+export const checkout = (state = {data: [], loading:false }, { type, payload }) => {
+  switch (type) {
+    case "success":
+      return payload;
+    case "loading":
       return payload;
     default:
       return state;

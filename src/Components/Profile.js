@@ -1,36 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Card, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 const Profile = () => {
-  const username = useSelector((state) => state.userData?.username);
   const email = useSelector((state) => state.userData?.email);
+  const firstname = useSelector((state) => state.userData?.firstname);
+  const lastname = useSelector((state) => state.userData?.lastname);
   const mobile = useSelector((state) => state.userData?.mobile);
-  const firstName = useSelector((state) => state.userData?.firstname);
-  const lastName = useSelector((state) => state.userData?.lastname);
-  const gender = useSelector((state) => state.userData?.gender);
   const age = useSelector((state) => state.userData?.age);
   const city = useSelector((state) => state.userData?.city);
-  const img = useSelector((state) => state.userData?.img);
-
+  const gender = useSelector((state) => state.userData?.gender);
+  const username = useSelector((state) => state.userData?.username);
+  const image = JSON.parse(localStorage.getItem("user"))?.image;
   return (
     <div>
-      {" "}
-      <Container >
+      <Container>
         <Row>
-          <Col >
+          <Col>
             <Card
-              style={{ width: "40rem", marginTop: "2rem" }}
+              style={{ width: "80%", marginTop: "2rem" }}
               className=" mx-auto"
             >
               <Card.Img
                 variant="top"
+                className="mx-auto"
                 style={{
                   width: "10rem",
                   height: "10rem",
-                  marginLeft: "15rem",
+                  
                 }}
-                src="https://img.icons8.com/cotton/90/null/gender-neutral-user--v3.png"
+                src={
+                  image
+                    ? `${image}`
+                    : "https://img.icons8.com/cotton/90/null/gender-neutral-user--v3.png"
+                }
               />
 
               <ListGroup className="list-group-flush">
@@ -43,17 +46,17 @@ const Profile = () => {
                 <ListGroup.Item>
                   <Card.Title> {mobile}</Card.Title>
                 </ListGroup.Item>
-                {firstName && (
+                {firstname && (
                   <ListGroup.Item>
-                    <Card.Title> {firstName}</Card.Title>
+                    <Card.Title> {firstname}</Card.Title>
                   </ListGroup.Item>
                 )}
-                {lastName && (
+                {lastname && (
                   <ListGroup.Item>
-                    <Card.Title> {lastName}</Card.Title>
+                    <Card.Title> {lastname}</Card.Title>
                   </ListGroup.Item>
                 )}
-               
+
                 {age && (
                   <ListGroup.Item>
                     <Card.Title> {age}</Card.Title>
@@ -72,7 +75,6 @@ const Profile = () => {
               </ListGroup>
             </Card>
           </Col>
-          
         </Row>
       </Container>
     </div>

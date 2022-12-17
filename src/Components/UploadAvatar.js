@@ -8,6 +8,7 @@ import Sidebar from "./Sidebar";
 const UploadAvatar = () => {
   const navigate = useNavigate();
   const [img, setImg] = useState(null);
+  
   const dispatch = useDispatch();
   const [isClicked, setIsClicked] = useState(false);
   const { data, error } = useSelector((state) => state.uploadAvatar);
@@ -20,7 +21,7 @@ const UploadAvatar = () => {
             sm={{ span: 1, offset: 0 }}
             className="mx-auto"
           >
-            <Sidebar />
+            <Sidebar tab="uploadAvatar" />
           </Col>
           <Col
             md={{ span: 4, offset: 0 }}
@@ -37,7 +38,7 @@ const UploadAvatar = () => {
                 width: "100%",
                 backgroundColor: "white",
                 height: "auto",
-                paddingBottom:"15px",
+                paddingBottom: "15px",
               }}
               onSubmit={(e) => e.preventDefault()}
             >
@@ -66,37 +67,38 @@ const UploadAvatar = () => {
                   }}
                 />
               </Form.Group>
-              {isClicked &&data.map((item) => {
-                return (
-                  
-                  <div>
-                    <span
-                      kay={item.message}
-                      style={{ color: "green", fontSize: "1.5rem" }}
-                    >
-                      {item.message}
-                    </span>
-                    <img
-                      src="https://img.icons8.com/color/60/null/double-tick.png"
-                      style={{ marginBottom: "0.5rem" }}
-                    />
-                  </div>
-                );
-              })}
-
               {isClicked &&
-                error.map((item) => {
+                data.map((item) => {
                   return (
-                    <p key={item.message} style={{ color: "red" }}>
-                      {item.message}
-                    </p>
+                    <div>
+                      <span
+                        kay={item.message}
+                        style={{ color: "green", fontSize: "1.5rem" }}
+                      >
+                        {item.message}
+                      </span>
+                      <img
+                        src="https://img.icons8.com/color/60/null/double-tick.png"
+                        style={{ marginBottom: "0.5rem" }}
+                      />
+                    </div>
                   );
                 })}
+
+              {isClicked && error
+                ? error.map((item) => {
+                    return (
+                      <p key={item.message} style={{ color: "red" }}>
+                        {item.message}
+                      </p>
+                    );
+                  })
+                : ""}
               <Button
                 variant="outline-success"
                 type="button"
                 className="mt-3 "
-                onClick={(e) => {
+                onClick={() => {
                   {
                     setIsClicked(true);
                     dispatch(upload(img));

@@ -14,7 +14,10 @@ import {
   userData,
   changePassword,
   uploadAvatar,
-  cartProduct
+  cartProduct,
+  getOrder,
+  getAllOrder,
+  checkout
 } from "./reducer";
 import thunk from "redux-thunk";
 const reducers = combineReducers({
@@ -28,7 +31,10 @@ const reducers = combineReducers({
   userData,
   changePassword,
   uploadAvatar,
-  cartProduct
+  cartProduct,
+  getOrder,
+  getAllOrder,
+  checkout
 });
 const middleware = [thunk];
 const userToken = localStorage.getItem("token");

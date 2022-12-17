@@ -8,7 +8,7 @@ const ChangePassword = () => {
   const navigate = useNavigate();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const[isClicked,setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   const dispatch = useDispatch();
   const { data, error } = useSelector((state) => state.changePassword);
   return (
@@ -20,7 +20,7 @@ const ChangePassword = () => {
             sm={{ span: 0, offset: 0 }}
             className="mx-auto"
           >
-            <Sidebar />
+            <Sidebar tab="changePass" />
           </Col>
           <Col
             md={{ span: 5, offset: 0 }}
@@ -77,34 +77,40 @@ const ChangePassword = () => {
                   }}
                 />
               </Form.Group>
-              {isClicked &&data.map((item) => {
-                return (
-                  <div>
-                    <span
-                      kay={item.message}
-                      style={{ color: "green", fontSize: "1.5rem" }}
-                    >
-                      {item.message}
-                    </span>
-                    <img
-                      src="https://img.icons8.com/color/60/null/double-tick.png"
-                      style={{ marginBottom: "0.5rem" }}
-                    />
-                  </div>
-                );
-              })}
+              {isClicked &&
+                data.map((item) => {
+                  return (
+                    <div>
+                      <span
+                        kay={item.message}
+                        style={{ color: "green", fontSize: "1.5rem" }}
+                      >
+                        {item.message}
+                      </span>
+                      <img
+                        src="https://img.icons8.com/color/60/null/double-tick.png"
+                        style={{ marginBottom: "0.5rem" }}
+                      />
+                    </div>
+                  );
+                })}
 
-          
-              {isClicked&&error.map((item)=>{
-                return<p key={item.message} style={{ color: "red" }}>
-                {item.message}
-              </p>
-              })}
+              {isClicked &&
+                error.map((item) => {
+                  return (
+                    <p key={item.message} style={{ color: "red" }}>
+                      {item.message}
+                    </p>
+                  );
+                })}
               <Button
                 variant="outline-success"
                 type="button"
                 className="mt-3 "
-                onClick={() => {setIsClicked(true);dispatch(password(oldPassword, newPassword))}}
+                onClick={() => {
+                  setIsClicked(true);
+                  dispatch(password(oldPassword, newPassword));
+                }}
               >
                 Done
               </Button>

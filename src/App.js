@@ -18,6 +18,7 @@ import Profile from "./Components/Profile";
 import GoLogin from "./Components/GoLogin";
 import UnFound from "./Components/UnFound";
 import Orders from "./Components/Orders";
+import OneOrder from "./Components/OneOrder";
 // import GetProfile from "./Components/GetProfile";
 import { useSelector } from "react-redux";
 
@@ -31,6 +32,7 @@ const login=useSelector(state=>state.checkLogin);
         <Route path="/" element={<Home  />} />
         <Route path="/goLogin" element={<GoLogin  />} />
         <Route path="/product/:productId" element={<Product />} />
+        <Route path="/orders/:orderId" element={<OneOrder />} />
         <Route path="/login" element={login?<Home/>:<Login />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/signup" element={login?<Home/>:<Signup />} />

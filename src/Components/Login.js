@@ -6,9 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { sendLogin } from "../redux/action";
 
 const Login = () => {
-  // useEffect(() =>{
-  // dispatch(getProfile(token))
-  // },[])
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.login);
 
@@ -112,7 +109,6 @@ const Login = () => {
                   userName.length >= 5 &&
                     password.length >= 7 &&
                     dispatch(sendLogin(userName, password));
-
                 }}
               >
                 Log in

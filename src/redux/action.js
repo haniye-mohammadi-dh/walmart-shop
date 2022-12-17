@@ -11,11 +11,7 @@ export const getData = () => async (dispatch, getState) => {
       type: "success",
       payload: { data: [...data], loading: false, error: "" },
     });
-    console.log(data);
-    console.log(getState().token);
-    console.log(getState().checkLogin);
   } catch (error) {
-    console.log(error.message);
     dispatch({
       type: "failed",
       payload: { data: [], loading: false, error: error.message },
@@ -39,23 +35,42 @@ export const getOneProduct = (productId) => async (dispatch, getState) => {
   } catch (error) {
     const answer = error.response.data;
     dispatch({
-      type: "failes",
+      type: "failed",
       payload: { data: [], loading: false, error: answer },
     });
   }
 };
-export const cartProduct = (productId) => async (dispatch, getState) => {
-  try {
-    const { data } = await axios.get(
-      `http://kzico.runflare.run/product/${productId}`
-    );
-    dispatch({ type: "oneProduct", payload: data });
-    const arrayCart = [...JSON.parse(localStorage.getItem("product") ?? "[]")];
-    arrayCart.push(getState().cartProduct);
-    localStorage.setItem("product", JSON.stringify(arrayCart));
-  } catch (error) {
-    console.log(error.response.data);
-  }
+export const cartProduct = (product, id) => async (dispatch, getState) => {
+  const arrayCart = localStorage.getItem("product")
+    ? JSON.parse(localStorage.getItem("product"))
+    : [];
+  localStorage.setItem("product", JSON.stringify(arrayCart));
+
+  product[0].qty = 1;
+  arrayCart.push(product[0]);
+  localStorage.setItem("product", JSON.stringify(arrayCart));
+};
+export const plusQty = (id) => async (dispatch, getState) => {
+  const arrayCart = localStorage.getItem("product")
+    ? JSON.parse(localStorage.getItem("product"))
+    : [];
+  arrayCart.forEach((cartItem) => {
+    if (cartItem._id === id && cartItem.countInStock > cartItem.qty) {
+      ++cartItem.qty;
+    }
+  });
+  localStorage.setItem("product", JSON.stringify(arrayCart));
+};
+export const minusQty = (id) => async (dispatch, getState) => {
+  const arrayCart = localStorage.getItem("product")
+    ? JSON.parse(localStorage.getItem("product"))
+    : [];
+  arrayCart.forEach((cartItem) => {
+    if (cartItem._id === id && 1 < cartItem.qty) {
+      --cartItem.qty;
+    }
+  });
+  localStorage.setItem("product", JSON.stringify(arrayCart));
 };
 export const sendLogin = (userName, password) => async (dispatch, getState) => {
   dispatch({
@@ -67,7 +82,7 @@ export const sendLogin = (userName, password) => async (dispatch, getState) => {
       email: `${userName}`,
       password: `${password}`,
     });
-    console.log(data);
+
     dispatch({ type: "setToken", payload: data.user.token });
     dispatch({ type: "checkLogin", payload: data.success });
     localStorage.setItem("token", getState().token);
@@ -97,12 +112,10 @@ export const sendSignup =
         type: "success",
         payload: { data: [data], error: [] },
       });
-      console.log(data.message);
-      console.log("first");
+  
     } catch (error) {
       const answer = error.response.data;
-      console.log(answer);
-      console.log("sec");
+
       dispatch({
         type: "failed",
         payload: { data: [], error: [answer] },
@@ -116,7 +129,7 @@ export const getProfile = () => async (dispatch, getState) => {
         authorization: `Bearer ${getState().token}`,
       },
     });
-    console.log(data.user);
+
     dispatch({ type: "userData", payload: data.user });
     localStorage.setItem("user", JSON.stringify(getState().userData));
   } catch (error) {}
@@ -136,19 +149,19 @@ export const password =
           },
         }
       );
-      console.log(getState().token);
+    
       dispatch({
         type: "success",
         payload: { data: [data], error: [] },
       });
-      console.log(data);
+
     } catch (error) {
       const answer = error.response.data;
       dispatch({
         type: "failed",
         payload: { data: [], error: [answer] },
       });
-      console.log(answer);
+
     }
   };
 export const profile =
@@ -159,7 +172,7 @@ export const profile =
         {
           firstname: `${firstName}`,
           lastname: `${lastName}`,
-          gender: `male`,
+          gender: `${gender}`,
           age: `${age}`,
           city: `${city}`,
         },
@@ -169,12 +182,12 @@ export const profile =
           },
         }
       );
-      console.log(getState().token);
+    
       dispatch({
         type: "success",
         payload: { data: [data], error: [] },
       });
-      console.log(data);
+   
       localStorage.setItem("user", JSON.stringify(getState().userData));
     } catch (error) {
       const answer = error.response.data;
@@ -182,7 +195,7 @@ export const profile =
         type: "failed",
         payload: { data: [], error: [answer] },
       });
-      console.log(answer);
+  
     }
   };
 export const upload = (img) => async (dispatch, getState) => {
@@ -202,53 +215,120 @@ export const upload = (img) => async (dispatch, getState) => {
       type: "success",
       payload: { data: [data], error: [] },
     });
-    console.log(data);
+  
   } catch (error) {
     const answer = error.response.data;
     dispatch({
       type: "failed",
       payload: { data: [], error: [answer] },
     });
-    console.log(answer);
+   
   }
 };
-export const submitCart = (city,address,postal,number) => async (dispatch, getState) => {
-  try {
-    const { data } = await axios.post(
-      "http://kzico.runflare.run/order/submit",
-      {
-        orderItems: [
-          { product: "productId", qty: 2 },
-          { product: "productId", qty: 2 },
-        ],
-        shippingAddress: {
-          address: `${address}`,
-          city: `${city}`,
-          postalCode:`${ postal}`,
-          phone:` ${number}`,
+export const submitCart =
+  (city, address, postal, number) => async (dispatch, getState) => {
+
+    
+    dispatch({
+      type: "loading",
+      payload: { data: [], loading:true },
+    });
+    try {
+      const { data } = await axios.post(
+        "http://kzico.runflare.run/order/submit",
+        {
+          orderItems: JSON.parse(localStorage.getItem("orderItems")),
+          shippingAddress: {
+            address: `${address}`,
+            city: `${city}`,
+            postalCode: `${postal}`,
+            phone: ` ${number}`,
+          },
+          paymentMethod: "cash",
+          shippingPrice: "5",
+          totalPrice: JSON.parse(localStorage.getItem("price")),
         },
-        paymentMethod: "cash",
-        shippingPrice: "5",
-        totalPrice: 3,
+        {
+          headers: {
+            authorization: `Bearer ${getState().token}`,
+          },
+        }
+      );
+      dispatch({
+        type: "success",
+        payload: { data: [data], loading: false },
+      });
+    
+      localStorage.setItem("checkOut", JSON.stringify(data));
+    } catch (error) {
+      const answer = error.response.data;
+
+
+    }
+  };
+export const removeItemm = (id) =>  (dispatch, getState) => {
+  const arrayCart = localStorage.getItem("product")
+    ? JSON.parse(localStorage.getItem("product"))
+    : [];
+  arrayCart.forEach((cartItem) => {
+    if (cartItem._id === id) {
+      arrayCart.splice(id, 1);
+    }
+  });
+  localStorage.setItem("product", JSON.stringify(arrayCart));
+};
+export const allOrder = () => async (dispatch, getState) => {
+  dispatch({
+    type: "loading",
+    payload: { data: [], loading: true, error: "" },
+  });
+  try {
+    const { data } = await axios.get("http://kzico.runflare.run/order/", {
+      headers: {
+        authorization: `Bearer ${getState().token}`,
       },
+    });
+
+    dispatch({
+      type: "success",
+      payload: { data: [...data], loading: false, error: "" },
+    });
+    localStorage.setItem("orders", JSON.stringify(data));
+  
+  } catch (error) {
+    dispatch({
+      type: "failed",
+      payload: { data: [], loading: false, error: error.message },
+    });
+    
+  }
+};
+export const oneOrder = (orderId) => async (dispatch, getState) => {
+  dispatch({
+    type: "loading",
+    payload: { data: [], loading: true, error: "" },
+  });
+
+
+  try {
+    const { data } = await axios.get(
+      `http://kzico.runflare.run/order/${orderId}`,
       {
         headers: {
-          authorization:`Bearer ${getState().token}`,
+          authorization: `Bearer ${getState().token}`,
         },
       }
     );
     dispatch({
       type: "success",
-      payload: { data: [data], error: [] },
+      payload: { data: [data], loading: false, error: "" },
     });
-    console.log(data);
+  
   } catch (error) {
     const answer = error.response.data;
-    console.log(answer);
-    console.log("sec");
     dispatch({
       type: "failed",
-      payload: { data: [], error: [answer] },
+      payload: { data: [], loading: false, error: answer },
     });
   }
 };

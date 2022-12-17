@@ -141,9 +141,7 @@ const Signup = () => {
                     mobile number is not valid
                   </span>
                 )}
-                {/* {!resolve.success && (
-            <p style={{ color: "red" }}>{resolve.message}</p>
-          )} */}
+            
               </Form.Group>{" "}
               {error.length
                 ? error.map((item) => {
