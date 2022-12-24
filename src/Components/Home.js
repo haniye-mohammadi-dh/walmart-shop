@@ -16,8 +16,11 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.products);
+  
   useEffect(() => {
     dispatch(getData());
+
+
   }, []);
   const navigate = useNavigate();
   return (

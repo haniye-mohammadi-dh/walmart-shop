@@ -102,6 +102,14 @@ const UploadAvatar = () => {
                   {
                     setIsClicked(true);
                     dispatch(upload(img));
+                    setTimeout(() => {
+                      
+                      !error.length&&    window.location.reload()
+                    },2000);
+                
+                  
+                      
+
                   }
                 }}
               >

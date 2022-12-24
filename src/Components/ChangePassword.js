@@ -8,9 +8,12 @@ const ChangePassword = () => {
   const navigate = useNavigate();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [oldPasswordTuched, setOldPasswordTuched] = useState(false);
+  const [newPasswordTuched, setNewPasswordTuched] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const dispatch = useDispatch();
   const { data, error } = useSelector((state) => state.changePassword);
+  console.log(data);
   return (
     <div>
       <Container style={{ color: "black" }}>
@@ -62,8 +65,18 @@ const ChangePassword = () => {
                   style={{ width: "70%", marginLeft: "13%" }}
                   onBlur={(e) => {
                     setOldPassword(e.target.value);
+                    setOldPasswordTuched(true);
                   }}
                 />
+                {!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+                  oldPassword
+                ) &&
+                  oldPasswordTuched && (
+                    <span style={{ color: "red" }}>
+                      password must be at least 1 specilal chracter and 1
+                      capital chracter 1 lower chracter and 4 number
+                    </span>
+                  )}
               </Form.Group>
 
               <Form.Group className="mb-1" controlId="formBasicPassword">
@@ -74,8 +87,18 @@ const ChangePassword = () => {
                   style={{ width: "70%", marginLeft: "13%" }}
                   onBlur={(e) => {
                     setNewPassword(e.target.value);
+                    setNewPasswordTuched(true);
                   }}
                 />
+                {!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+                  newPassword
+                ) &&
+                  newPasswordTuched && (
+                    <span style={{ color: "red" }}>
+                      password must be at least 1 specilal chracter and 1
+                      capital chracter 1 lower chracter and 4 number
+                    </span>
+                  )}
               </Form.Group>
               {isClicked &&
                 data.map((item) => {
@@ -88,27 +111,29 @@ const ChangePassword = () => {
                         {item.message}
                       </span>
                       <img
-                        src="https://img.icons8.com/color/60/null/double-tick.png"
+                        src="https://img.icons8.com/color/50/null/double-tick.png"
                         style={{ marginBottom: "0.5rem" }}
                       />
                     </div>
                   );
                 })}
+          
 
-              {isClicked &&
-                error.map((item) => {
-                  return (
-                    <p key={item.message} style={{ color: "red" }}>
-                      {item.message}
-                    </p>
-                  );
-                })}
+              {isClicked && !oldPassword && !newPassword ? (
+                <p style={{ color: "red" }}>please fill the filds</p>
+              ) : isClicked ? (
+                error[0]?.message.length > 0 && (
+                  <p style={{ color: "red" }}>{error[0].message}</p>
+                )
+              ) : (
+                ""
+              )}
               <Button
                 variant="outline-success"
                 type="button"
                 className="mt-3 "
                 onClick={() => {
-                  setIsClicked(true);
+                  setIsClicked((last) => !last);
                   dispatch(password(oldPassword, newPassword));
                 }}
               >

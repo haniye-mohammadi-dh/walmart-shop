@@ -11,6 +11,8 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "animate.css";
 import { minusQty, plusQty, removeItemm } from "../redux/action";
 
 const Cart = () => {
@@ -150,7 +152,22 @@ const Cart = () => {
             variant="primary"
             className="mx-auto"
             style={{ width: "20%" }}
-            onClick={() => login && productList.length && navigate("/Address")}
+            onClick={() => login ?productList.length && navigate("/Address"):
+            Swal.fire({
+              icon: "error",
+              title: "Please login",
+              timer: 2000,
+              showConfirmButton: false,
+              showClass: {
+                popup:
+                  "animate__animated animate__fadeInDown",
+              },
+              hideClass: {
+                popup:
+                  "animate__animated animate__fadeOutUp",
+              },
+            })
+          }
           >
             Next
           </Button>

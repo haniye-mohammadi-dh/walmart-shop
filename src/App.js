@@ -32,7 +32,7 @@ const login=useSelector(state=>state.checkLogin);
         <Route path="/" element={<Home  />} />
         <Route path="/goLogin" element={<GoLogin  />} />
         <Route path="/product/:productId" element={<Product />} />
-        <Route path="/orders/:orderId" element={<OneOrder />} />
+        <Route path="/orders/:orderId" element={!login?<GoLogin/>:<OneOrder />} />
         <Route path="/login" element={login?<Home/>:<Login />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/signup" element={login?<Home/>:<Signup />} />

@@ -12,6 +12,14 @@ const Profile = () => {
   const gender = useSelector((state) => state.userData?.gender);
   const username = useSelector((state) => state.userData?.username);
   const image = JSON.parse(localStorage.getItem("user"))?.image;
+  const chProfile=JSON.parse(localStorage.getItem("chProfile"))
+  // const chAvatar=JSON.parse(localStorage.getItem("chAvatar"))
+  if (chProfile===true) {
+    window.location.reload() 
+    localStorage.setItem("chProfile",JSON.stringify(false))
+    // localStorage.setItem("chAvatar",JSON.stringify(false))
+  }
+  
   return (
     <div>
       <Container>

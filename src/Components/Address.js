@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Navbar, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { submitCart } from "../redux/action";
+import { AddressAction, submitCart } from "../redux/action";
 
 const Address = () => {
   const navigate = useNavigate();
@@ -15,6 +15,8 @@ const Address = () => {
   const [cityTuched, setCityTuched] = useState(false);
   const [postalTuched, setPostalTuched] = useState(false);
   const [numberTuched, setNumberTuched] = useState(false);
+  const [clicked, setClicked] = useState(false);
+
   return (
     <div>
       {" "}
@@ -70,7 +72,7 @@ const Address = () => {
                 <Form.Label>Address </Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder=" Address "
+                  placeholder="Address "
                   style={{ width: "70%", marginLeft: "13%" }}
                   onBlur={(e) => {
                     setAddress(e.target.value);
@@ -113,15 +115,17 @@ const Address = () => {
                   <p style={{ color: "red" }}>phone number is not valid</p>
                 )}
               </Form.Group>
+              {clicked&&!address&&!city&&!postal&&!number&& <p style={{ color: "red" }}>please fill the filds</p>}
               <Button
                 onClick={() => {
+                  setClicked(true)
                   if (
                     city.length >= 2 &&
                     address.length >= 10 &&
                     postal.length >= 8 &&
                     /^(09)[\d]/.test(number)
                   ) {
-                    dispatch(submitCart(city, address, postal, number));
+                    dispatch(AddressAction(address,city,postal,number))
                     navigate("/checkout");
                   } else {
                     navigate("/address");

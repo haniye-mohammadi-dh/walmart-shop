@@ -8,21 +8,22 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { submitCart } from "../redux/action";
 
 const Checkout = () => {
-  const checkkOut = JSON.parse(localStorage.getItem("checkOut"));
-  const [checkOut, setCheckOut] = useState(checkkOut);
+  let cart = JSON.parse(localStorage.getItem("product"));
 
+  const x =  useSelector(response=>response.address)
+  console.log(x);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  useEffect(() => {
-    setCheckOut(JSON.parse(localStorage.getItem("checkOut")));
-  }, [checkOut]);
 
   return (
     <div>
-      {checkOut ? (
-        checkOut.orderItems.map((item) => {
+      {cart ? (
+        cart.map((item) => {
           return (
             <Container>
               <Row>
@@ -44,13 +45,13 @@ const Checkout = () => {
                           <div style={{ width: "100%", marginTop: "5%" }}>
                             <Row>
                               <Col>
-                                <Card.Title>{item.product.name}</Card.Title>
+                                <Card.Title>{item.name}</Card.Title>
                               </Col>
                               <Col>
-                                <Card.Title>{item.product.color}</Card.Title>
+                                <Card.Title>{item.color}</Card.Title>
                               </Col>
                               <Col>
-                                <Card.Title> ${item.product.price} </Card.Title>
+                                <Card.Title> ${item.price} </Card.Title>
                               </Col>
                               <Col>
                                 <Card.Title>count {item.qty} </Card.Title>
@@ -103,8 +104,10 @@ const Checkout = () => {
           className="mx-auto"
           style={{ width: "20%" }}
           onClick={() => {
-            navigate("/");
-            localStorage.setItem("product", []);
+            dispatch(submitCart(x.city, x.address, x.postal, x.number));
+            localStorage.removeItem("product");
+            navigate("/orders");
+            
           }}
         >
           Done

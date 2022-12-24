@@ -11,6 +11,7 @@ export const getData = () => async (dispatch, getState) => {
       type: "success",
       payload: { data: [...data], loading: false, error: "" },
     });
+    console.log(getState().checkLogin);
   } catch (error) {
     dispatch({
       type: "failed",
@@ -73,6 +74,7 @@ export const minusQty = (id) => async (dispatch, getState) => {
   localStorage.setItem("product", JSON.stringify(arrayCart));
 };
 export const sendLogin = (userName, password) => async (dispatch, getState) => {
+  dispatch({ type: "checkLogin", payload: false });
   dispatch({
     type: "loading",
     payload: { data: [], loading: true, error: [] },
@@ -84,10 +86,12 @@ export const sendLogin = (userName, password) => async (dispatch, getState) => {
     });
 
     dispatch({ type: "setToken", payload: data.user.token });
-    dispatch({ type: "checkLogin", payload: data.success });
+    dispatch({ type: "checkLogin", payload: true });
     localStorage.setItem("token", getState().token);
     localStorage.setItem("login", getState().checkLogin);
+   
   } catch (error) {
+    dispatch({ type: "checkLogin", payload: false });
     const answer = error.response.data;
     dispatch({
       type: "failed",
@@ -170,11 +174,11 @@ export const profile =
       const { data } = await axios.put(
         "http://kzico.runflare.run/user/change-profile",
         {
-          firstname: `${firstName}`,
-          lastname: `${lastName}`,
-          gender: `${gender}`,
-          age: `${age}`,
-          city: `${city}`,
+          firstname: firstName,
+          lastname: lastName,
+          gender: gender,
+          age: age,
+          city: city,
         },
         {
           headers: {
@@ -244,7 +248,7 @@ export const submitCart =
             postalCode: `${postal}`,
             phone: ` ${number}`,
           },
-          paymentMethod: "cash",
+          paymentMethod: "cash",  
           shippingPrice: "5",
           totalPrice: JSON.parse(localStorage.getItem("price")),
         },
@@ -277,6 +281,11 @@ export const removeItemm = (id) =>  (dispatch, getState) => {
   });
   localStorage.setItem("product", JSON.stringify(arrayCart));
 };
+export const AddressAction = (address,city,postal,number) =>  (dispatch, getState) => {
+ dispatch({type:"submitAddress",
+payload:{city:city,postal:postal,number:number,address:address}})
+ 
+};
 export const allOrder = () => async (dispatch, getState) => {
   dispatch({
     type: "loading",
@@ -288,14 +297,15 @@ export const allOrder = () => async (dispatch, getState) => {
         authorization: `Bearer ${getState().token}`,
       },
     });
-
     dispatch({
       type: "success",
       payload: { data: [...data], loading: false, error: "" },
     });
     localStorage.setItem("orders", JSON.stringify(data));
-  
+  console.log(data);
   } catch (error) {
+    
+    console.log(error);
     dispatch({
       type: "failed",
       payload: { data: [], loading: false, error: error.message },

@@ -12,13 +12,10 @@ import { useNavigate } from "react-router-dom";
 import { getProfile } from "../redux/action";
 const Header = () => {
   const navigate = useNavigate();
-
   const login = useSelector((state) => state.checkLogin);
-
   const useremail = useSelector((state) => state.userData?.email);
   const product = JSON.parse(localStorage.getItem("product"));
   const img = JSON.parse(localStorage.getItem("user"))?.image;
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -130,7 +127,7 @@ const Header = () => {
                                 onClick={() => {
                                   localStorage.removeItem("token");
                                   localStorage.removeItem("user");
-                                  localStorage.removeItem("login");
+                                  localStorage.setItem("login", false);
 
                                   window.location.reload();
                                 }}
@@ -142,14 +139,16 @@ const Header = () => {
                         </div>
                       </div>
                     ) : (
-                      <p
-                        onClick={() => {
-                          navigate("login");
-                        }}
-                      >
-                        {" "}
-                        login
-                      </p>
+                      !login && (
+                        <p
+                          onClick={() => {
+                            navigate("login");
+                          }}
+                        >
+                          {" "}
+                          login
+                        </p>
+                      )
                     )}
                   </Nav.Link>
                 </Nav>

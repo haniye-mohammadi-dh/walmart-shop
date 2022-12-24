@@ -119,6 +119,14 @@ export const checkLogin = (state = false, { type, payload }) => {
       return state;
   }
 };
+export const address = (state = {city:"",address:"",number:"",postal:""}, { type, payload }) => {
+  switch (type) {
+    case "submitAddress":
+      return payload;
+    default:
+      return state;
+  }
+};
 export const userData = (state = {data: [], error: [] }, { type, payload }) => {
   switch (type) {
     case "userData":

@@ -12,9 +12,15 @@ const ChangeProfile = () => {
   const [age, setAge] = useState("");
   const [city, setCity] = useState("");
   const [gender, setGender] = useState("");
+  const [firstNameOnBelour, setFirstNameOnBelour] = useState(false);
+  const [lastNameOnBelour, setLastNameOnBelour] = useState(false);
+  const [ageOnBelour, setAgeOnBelour] = useState(false);
+  const [cityOnBelour, setCityOnBelour] = useState(false);
+
   const dispatch = useDispatch();
   const { data, error } = useSelector((state) => state.changePassword);
   const [isClicked, setIsClicked] = useState(false);
+
   return (
     <div>
       <Container style={{ color: "black" }}>
@@ -66,8 +72,10 @@ const ChangeProfile = () => {
                   style={{ width: "70%", marginLeft: "13%" }}
                   onBlur={(e) => {
                     setFirstName(e.target.value);
+                    setFirstNameOnBelour(true)
                   }}
                 />
+                {firstNameOnBelour&&firstName.length<3&&<p style={{color:"red"}}>firstname must be at least 3 characters</p>}
               </Form.Group>
               <Form.Group className="mb-1 mt-2" controlId="formBasicEmail">
                 <Form.Label>Last Name </Form.Label>
@@ -77,8 +85,10 @@ const ChangeProfile = () => {
                   style={{ width: "70%", marginLeft: "13%" }}
                   onBlur={(e) => {
                     setLastName(e.target.value);
+                    setLastNameOnBelour(true)
                   }}
-                />
+                  />
+                  {lastNameOnBelour&&lastName.length<3&&<p style={{color:"red"}}>lastName must be at least 3 characters</p>}
               </Form.Group>
               <Form.Group className="mb-1 mt-2" controlId="formBasicEmail">
                 <Form.Label>Age</Form.Label>
@@ -88,8 +98,10 @@ const ChangeProfile = () => {
                   style={{ width: "70%", marginLeft: "13%" }}
                   onBlur={(e) => {
                     setAge(e.target.value);
+                    setAgeOnBelour(true)
                   }}
                 />
+                {ageOnBelour&&age<15&&<p style={{color:"red"}}>age must be greater than or equal to 15</p>}
               </Form.Group>
               <Form.Group className="mb-1 mt-2" controlId="formBasicEmail">
                 <Form.Label>City</Form.Label>
@@ -99,8 +111,10 @@ const ChangeProfile = () => {
                   style={{ width: "70%", marginLeft: "13%" }}
                   onBlur={(e) => {
                     setCity(e.target.value);
+                    setCityOnBelour(true)
                   }}
                 />
+                 {cityOnBelour&&city.length<3&&<p style={{color:"red"}}>city must be at least 3 characters</p>}
               </Form.Group>
               <Form.Group className="mb-1 mt-2" controlId="formBasicEmail">
                 <Form.Label>Gender</Form.Label>
@@ -151,8 +165,7 @@ const ChangeProfile = () => {
               !firstName &&
               !lastName &&
               !age &&
-              !city &&
-              !gender ? (
+              !city ? (
                 <p style={{ color: "red" }}>please fill the filds</p>
               ) : error ? (
                 error.map((item) => {
@@ -173,6 +186,7 @@ const ChangeProfile = () => {
                 onClick={() => {
                   setIsClicked(true);
                   dispatch(profile(firstName, lastName, age, city, gender));
+                localStorage.setItem("chProfile",JSON.stringify(true))
                 }}
               >
                 Done
